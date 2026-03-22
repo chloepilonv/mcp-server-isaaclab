@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
-# One-time setup: install Isaac Lab on a fresh Nebius GPU instance.
+# One-time setup: install Isaac Lab on a fresh Brev GPU instance.
 #
-# Prerequisites: Nebius instance with NVIDIA GPU, Ubuntu 22.04, CUDA 12.x
+# Prerequisites: Brev instance with NVIDIA GPU, Ubuntu 22.04, CUDA 12.x
 #
 # Usage:
-#   ssh user@nebius-host 'bash -s' < scripts/setup-nebius-isaaclab.sh
+#   ssh user@brev-host 'bash -s' < scripts/setup-brev-isaaclab.sh
 #   OR
-#   ./scripts/setup-nebius-isaaclab.sh  (run directly on the instance)
+#   ./scripts/setup-brev-isaaclab.sh  (run directly on the instance)
 
 set -euo pipefail
 
-echo "==> Isaac Lab Setup for Nebius GPU Instance"
+echo "==> Isaac Lab Setup for Brev GPU Instance"
 echo "    $(nvidia-smi --query-gpu=name --format=csv,noheader 2>/dev/null || echo 'GPU not detected')"
 
 ISAAC_LAB_DIR="$HOME/IsaacLab"

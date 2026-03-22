@@ -16,8 +16,8 @@ REMOTE_AGENT_PORT = 8421
 
 
 @dataclass
-class NebiusConnection:
-    """Manages SSH tunnel and HTTP communication with a Nebius GPU instance."""
+class BrevConnection:
+    """Manages SSH tunnel and HTTP communication with a Brev GPU instance."""
 
     host: str | None = None
     user: str = "ubuntu"
@@ -50,7 +50,7 @@ class NebiusConnection:
         user: str | None = None,
         key_path: str | None = None,
     ) -> dict:
-        """Establish SSH tunnel to Nebius instance and verify remote agent is running."""
+        """Establish SSH tunnel to Brev instance and verify remote agent is running."""
         if host:
             self.host = host
         if user:
@@ -59,7 +59,7 @@ class NebiusConnection:
             self.key_path = key_path
 
         if not self.host:
-            raise ValueError("No host specified. Provide a Nebius instance IP or hostname.")
+            raise ValueError("No host specified. Provide a Brev instance IP or hostname.")
 
         # Close any existing connection
         await self.disconnect()
@@ -110,7 +110,7 @@ class NebiusConnection:
                 "status": "tunnel_up_agent_unreachable",
                 "host": self.host,
                 "error": str(e),
-                "hint": "Run `isaacsim-remote-agent` on the Nebius instance, or use deploy script.",
+                "hint": "Run `isaaclab-remote-agent` on the Brev instance, or use deploy script.",
             }
 
     async def disconnect(self) -> dict:
@@ -149,4 +149,4 @@ class NebiusConnection:
 
 
 # Global singleton
-connection = NebiusConnection()
+connection = BrevConnection()

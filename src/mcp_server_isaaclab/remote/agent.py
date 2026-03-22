@@ -1,5 +1,5 @@
 """
-Remote agent that runs on the Nebius GPU instance.
+Remote agent that runs on the Brev GPU instance.
 
 Exposes a FastAPI HTTP interface for the MCP server to call through an SSH tunnel.
 Manages Isaac Lab simulation sessions, training jobs, and asset/sensor operations.

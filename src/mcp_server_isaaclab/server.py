@@ -1,7 +1,7 @@
 """
 MCP Server for NVIDIA Isaac Lab.
 
-Runs locally and communicates with a remote agent on a Nebius GPU instance
+Runs locally and communicates with a remote agent on a Brev GPU instance
 through an SSH tunnel. Exposes tools for environment management, training,
 evaluation, asset browsing, and more.
 """
@@ -23,11 +23,11 @@ mcp = FastMCP(
     "Isaac Lab",
     instructions=textwrap.dedent("""\
         MCP server for NVIDIA Isaac Lab robotics simulation.
-        Isaac Lab runs on a remote Nebius GPU instance. You must connect first
+        Isaac Lab runs on a remote Brev GPU instance. You must connect first
         with `connect_instance`, then use the other tools to interact with it.
 
         Typical workflow:
-        1. connect_instance — establish SSH tunnel to Nebius
+        1. connect_instance — establish SSH tunnel to Brev
         2. list_environments — see available tasks
         3. start_training / create_session — train or interactively step
         4. monitor_training / step_session — observe progress
@@ -48,13 +48,13 @@ async def connect_instance(
     user: str = "ubuntu",
     key_path: str | None = None,
 ) -> str:
-    """Connect to a Nebius GPU instance running the Isaac Lab remote agent.
+    """Connect to a Brev GPU instance running the Isaac Lab remote agent.
 
     This establishes an SSH tunnel for all subsequent communication.
-    The remote agent (`isaacsim-remote-agent`) must be running on the instance.
+    The remote agent (`isaaclab-remote-agent`) must be running on the instance.
 
     Args:
-        host: IP address or hostname of the Nebius instance
+        host: IP address or hostname of the Brev instance
         user: SSH username (default: ubuntu)
         key_path: Path to SSH private key file (optional, uses default keys if not set)
     """
@@ -64,7 +64,7 @@ async def connect_instance(
 
 @mcp.tool()
 async def disconnect_instance() -> str:
-    """Disconnect from the Nebius instance and tear down the SSH tunnel."""
+    """Disconnect from the Brev instance and tear down the SSH tunnel."""
     result = await connection.disconnect()
     return json.dumps(result, indent=2)
 
@@ -358,7 +358,7 @@ async def list_videos() -> str:
 
 @mcp.tool()
 async def read_remote_file(path: str, tail: int = 100) -> str:
-    """Read a file from the remote Nebius instance.
+    """Read a file from the remote Brev instance.
 
     Supports text files (returns last N lines) and images (returns base64).
 
@@ -454,7 +454,7 @@ async def isaaclab_guide() -> str:
         - Checkpoints are saved periodically in logs/{framework}/{task}/{timestamp}/checkpoints/
 
         ## Remote Execution
-        - All computation runs headless on the Nebius GPU instance
+        - All computation runs headless on the Brev GPU instance
         - Livestreaming available but not needed for training
         - Videos are recorded during evaluation with --video flag
     """)
@@ -464,7 +464,7 @@ async def isaaclab_guide() -> str:
 async def environments_resource() -> str:
     """Dynamic list of available environments from the connected instance."""
     if not connection.connected:
-        return "Not connected to a Nebius instance. Use connect_instance first."
+        return "Not connected to a Brev instance. Use connect_instance first."
     try:
         result = await connection.get("/envs")
         return json.dumps(result, indent=2)
@@ -497,7 +497,7 @@ async def train_locomotion(
         Train a {robot} locomotion policy on {terrain} terrain.
 
         Recommended setup:
-        1. Connect to Nebius instance
+        1. Connect to Brev instance
         2. Start training:
            - Task: {task}
            - Framework: rsl_rl (best for locomotion)
@@ -524,7 +524,7 @@ async def train_manipulation(
         Train a {robot} arm for {task_type} task.
 
         Recommended setup:
-        1. Connect to Nebius instance
+        1. Connect to Brev instance
         2. Start training:
            - Task: {task}
            - Framework: skrl

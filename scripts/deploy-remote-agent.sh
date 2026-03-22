@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Deploy the Isaac Lab remote agent to a Nebius GPU instance.
+# Deploy the Isaac Lab remote agent to a Brev GPU instance.
 #
 # Usage:
 #   ./scripts/deploy-remote-agent.sh <HOST> [USER] [KEY_PATH]
 #
 # Example:
-#   ./scripts/deploy-remote-agent.sh 203.0.113.42 ubuntu ~/.ssh/nebius_key
+#   ./scripts/deploy-remote-agent.sh 203.0.113.42 ubuntu ~/.ssh/brev_key
 
 set -euo pipefail
 

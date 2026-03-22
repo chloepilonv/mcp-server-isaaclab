@@ -2,7 +2,7 @@
   "mcpServers": {
     "isaaclab": {
       "command": "mcp-server-isaaclab",
-      "description": "Control NVIDIA Isaac Lab robotics simulations on a remote Nebius GPU instance. Use for: creating/stepping simulation environments, training RL policies (locomotion, manipulation), evaluating checkpoints, monitoring GPU, managing training jobs, and running custom Isaac Lab scripts."
+      "description": "Control NVIDIA Isaac Lab robotics simulations on a remote Brev GPU instance. Use for: creating/stepping simulation environments, training RL policies (locomotion, manipulation), evaluating checkpoints, monitoring GPU, managing training jobs, and running custom Isaac Lab scripts."
     }
   }
 }

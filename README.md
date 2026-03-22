@@ -2,7 +2,7 @@
 
 MCP server for **NVIDIA Isaac Lab** — RL training, environment management, and policy evaluation from Claude.
 
-Runs locally on your Mac and communicates with Isaac Lab on a remote **Nebius GPU instance** through an SSH tunnel. All heavy simulation stays on the GPU; Claude just sends commands.
+Runs locally on your Mac and communicates with Isaac Lab on a remote **Brev GPU instance** through an SSH tunnel. All heavy simulation stays on the GPU; Claude just sends commands.
 
 > **Not Isaac Sim.** This server controls Isaac Lab (RL environments, training pipelines, policy evaluation). For low-level Isaac Sim control (USD prims, scene authoring, Kit commands), see [mcp-server-isaacsim](https://github.com/chloepilonv/mcp-server-isaacsim).
 
@@ -11,7 +11,7 @@ Runs locally on your Mac and communicates with Isaac Lab on a remote **Nebius GP
 ```
 ┌──────────┐    stdio    ┌──────────────┐   SSH tunnel   ┌─────────────────┐
 │  Claude   │◄──────────►│  MCP Server  │◄──────────────►│  Remote Agent   │
-│  (local)  │            │  (local Mac) │   port 8421    │  (Nebius GPU)   │
+│  (local)  │            │  (local Mac) │   port 8421    │  (Brev GPU)     │
 └──────────┘            └──────────────┘                └────────┬────────┘
                                                                   │
                                                           ┌───────▼────────┐
@@ -20,13 +20,13 @@ Runs locally on your Mac and communicates with Isaac Lab on a remote **Nebius GP
                                                           └────────────────┘
 ```
 
-**MCP Server** (this repo) runs on your Mac as a stdio MCP server. It opens an SSH tunnel to the Nebius instance and forwards all requests to the **Remote Agent** — a FastAPI service running next to Isaac Lab on the GPU box.
+**MCP Server** (this repo) runs on your Mac as a stdio MCP server. It opens an SSH tunnel to the Brev instance and forwards all requests to the **Remote Agent** — a FastAPI service running next to Isaac Lab on the GPU box.
 
 ## Prerequisites
 
 - Python 3.10+
-- A Nebius GPU instance (or any Linux box with an NVIDIA GPU)
-- SSH access to the instance
+- A Brev GPU instance (provision with `brev create`)
+- SSH access to the instance (`brev ssh`)
 - Isaac Lab installed on the instance (setup script included)
 
 ## Quick Start
@@ -39,24 +39,32 @@ cd mcp-server-isaaclab
 pip install -e .
 ```
 
-### 2. Install Isaac Lab on your Nebius instance
+### 2. Provision a Brev GPU instance
 
 ```bash
-scp scripts/setup-nebius-isaaclab.sh ubuntu@<NEBIUS_IP>:~
-ssh ubuntu@<NEBIUS_IP> bash ~/setup-nebius-isaaclab.sh
+brev create isaaclab-gpu --gpu A100
+brev ssh isaaclab-gpu
+```
+
+### 3. Install Isaac Lab on the instance
+
+```bash
+# From your Mac:
+scp scripts/setup-brev-isaaclab.sh ubuntu@<BREV_HOST>:~
+ssh ubuntu@<BREV_HOST> bash ~/setup-brev-isaaclab.sh
 ```
 
 This installs Isaac Lab + the skrl, rsl_rl, and sb3 RL frameworks.
 
-### 3. Deploy the remote agent
+### 4. Deploy the remote agent
 
 ```bash
-./scripts/deploy-remote-agent.sh <NEBIUS_IP> ubuntu ~/.ssh/your_key
+./scripts/deploy-remote-agent.sh <BREV_HOST> ubuntu ~/.ssh/your_key
 ```
 
 This copies the agent code, installs it, and starts it as a systemd service on port 8421.
 
-### 4. Configure Claude
+### 5. Configure Claude
 
 The project includes `.mcp.json` so Claude Code automatically picks up the server when you're in this directory.
 
@@ -90,7 +98,7 @@ For **Claude Code** in other projects, add to the project's `.mcp.json`:
 
 | Tool | Description |
 |------|-------------|
-| `connect_instance` | Establish SSH tunnel to Nebius GPU instance |
+| `connect_instance` | Establish SSH tunnel to Brev GPU instance |
 | `disconnect_instance` | Tear down the connection |
 | `instance_status` | GPU utilization, active sessions & jobs |
 | `gpu_status` | Detailed GPU memory, temperature, utilization |
@@ -131,7 +139,7 @@ For **Claude Code** in other projects, add to the project's `.mcp.json`:
 
 **Train a locomotion policy:**
 ```
-> Connect to my Nebius instance at 203.0.113.42
+> Connect to my Brev instance at 203.0.113.42
 > What environments are available for quadruped locomotion?
 > Train Anymal-D on rough terrain with rsl_rl, 4096 envs, 1500 iterations
 > Check on the training
@@ -140,7 +148,7 @@ For **Claude Code** in other projects, add to the project's `.mcp.json`:
 
 **Explore an environment interactively:**
 ```
-> Connect to 203.0.113.42
+> Connect to my Brev GPU
 > Create a session with Isaac-Cartpole-v0, 32 envs
 > What does the observation space look like?
 > Step 100 times with random actions — what are the rewards?
@@ -184,10 +192,10 @@ mcp-server-isaaclab/
 │   ├── server.py            # MCP server (runs locally, exposes tools)
 │   ├── connection.py        # SSH tunnel + HTTP client manager
 │   └── remote/
-│       └── agent.py         # FastAPI agent (runs on Nebius GPU)
+│       └── agent.py         # FastAPI agent (runs on Brev GPU)
 ├── scripts/
-│   ├── deploy-remote-agent.sh      # Deploy agent to Nebius
-│   └── setup-nebius-isaaclab.sh    # Install Isaac Lab on instance
+│   ├── deploy-remote-agent.sh      # Deploy agent to Brev
+│   └── setup-brev-isaaclab.sh      # Install Isaac Lab on instance
 ├── .mcp.json                # Claude Code MCP config
 ├── pyproject.toml
 └── README.md

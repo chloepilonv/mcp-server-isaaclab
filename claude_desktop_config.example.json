@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "isaaclab": {
+      "command": "mcp-server-isaacsim",
+      "env": {}
+    }
+  }
+}

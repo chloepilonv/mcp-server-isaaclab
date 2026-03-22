@@ -3,9 +3,9 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "mcp-server-isaacsim"
+name = "mcp-server-isaaclab"
 version = "0.1.0"
-description = "MCP server for NVIDIA Isaac Lab — control robotics simulations from Claude"
+description = "MCP server for NVIDIA Isaac Lab — RL training, environment management, and policy evaluation from Claude"
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
@@ -29,12 +29,12 @@ dev = [
 ]
 
 [project.scripts]
-mcp-server-isaacsim = "mcp_server_isaacsim.server:main"
-isaacsim-remote-agent = "mcp_server_isaacsim.remote.agent:main"
+mcp-server-isaaclab = "mcp_server_isaaclab.server:main"
+isaaclab-remote-agent = "mcp_server_isaaclab.remote.agent:main"
 
 [tool.ruff]
 line-length = 100
 target-version = "py310"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/mcp_server_isaacsim"]
+packages = ["src/mcp_server_isaaclab"]

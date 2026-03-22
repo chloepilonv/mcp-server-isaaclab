@@ -15,7 +15,7 @@ import textwrap
 
 from mcp.server.fastmcp import FastMCP
 
-from mcp_server_isaacsim.connection import connection
+from mcp_server_isaaclab.connection import connection
 
 logger = logging.getLogger(__name__)
 

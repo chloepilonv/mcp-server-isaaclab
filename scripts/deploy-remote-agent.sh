@@ -18,7 +18,7 @@ if [ -n "$KEY" ]; then
     SSH_OPTS="$SSH_OPTS -i $KEY"
 fi
 
-REMOTE_DIR="/home/$USER/mcp-server-isaacsim"
+REMOTE_DIR="/home/$USER/mcp-server-isaaclab"
 
 echo "==> Deploying remote agent to $USER@$HOST"
 
@@ -33,7 +33,7 @@ rsync -avz --exclude '__pycache__' --exclude '*.pyc' --exclude '.git' \
 echo "==> Installing remote dependencies..."
 ssh $SSH_OPTS "$USER@$HOST" bash -s <<'REMOTE_SCRIPT'
 set -euo pipefail
-cd ~/mcp-server-isaacsim
+cd ~/mcp-server-isaaclab
 
 # Create venv if it doesn't exist (use system Python to keep Isaac Lab accessible)
 if [ ! -d ".venv" ]; then
@@ -50,7 +50,7 @@ REMOTE_SCRIPT
 echo "==> Setting up systemd service..."
 ssh $SSH_OPTS "$USER@$HOST" bash -s <<REMOTE_SERVICE
 set -euo pipefail
-sudo tee /etc/systemd/system/isaacsim-remote-agent.service > /dev/null <<EOF
+sudo tee /etc/systemd/system/isaaclab-remote-agent.service > /dev/null <<EOF
 [Unit]
 Description=Isaac Lab Remote Agent for MCP
 After=network.target
@@ -58,24 +58,24 @@ After=network.target
 [Service]
 Type=simple
 User=$USER
-WorkingDirectory=/home/$USER/mcp-server-isaacsim
-ExecStart=/home/$USER/mcp-server-isaacsim/.venv/bin/isaacsim-remote-agent
+WorkingDirectory=/home/$USER/mcp-server-isaaclab
+ExecStart=/home/$USER/mcp-server-isaaclab/.venv/bin/isaaclab-remote-agent
 Restart=on-failure
 RestartSec=5
 Environment=ISAACLAB_PATH=/home/$USER/IsaacLab
-Environment=ISAACSIM_AGENT_PORT=8421
+Environment=ISAACLAB_AGENT_PORT=8421
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
 sudo systemctl daemon-reload
-sudo systemctl enable isaacsim-remote-agent
-sudo systemctl restart isaacsim-remote-agent
+sudo systemctl enable isaaclab-remote-agent
+sudo systemctl restart isaaclab-remote-agent
 
 echo "==> Service started. Checking status..."
 sleep 2
-sudo systemctl status isaacsim-remote-agent --no-pager || true
+sudo systemctl status isaaclab-remote-agent --no-pager || true
 REMOTE_SERVICE
 
 echo ""
@@ -86,7 +86,7 @@ echo "    To use with Claude, add to claude_desktop_config.json:"
 echo "    {"
 echo "      \"mcpServers\": {"
 echo "        \"isaaclab\": {"
-echo "          \"command\": \"mcp-server-isaacsim\""
+echo "          \"command\": \"mcp-server-isaaclab\""
 echo "        }"
 echo "      }"
 echo "    }"

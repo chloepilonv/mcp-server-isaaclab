@@ -1,8 +1,10 @@
-# mcp-server-isaacsim
+# mcp-server-isaaclab
 
-MCP server for **NVIDIA Isaac Lab** — control robotics simulations from Claude.
+MCP server for **NVIDIA Isaac Lab** — RL training, environment management, and policy evaluation from Claude.
 
 Runs locally on your Mac and communicates with Isaac Lab on a remote **Nebius GPU instance** through an SSH tunnel. All heavy simulation stays on the GPU; Claude just sends commands.
+
+> **Not Isaac Sim.** This server controls Isaac Lab (RL environments, training pipelines, policy evaluation). For low-level Isaac Sim control (USD prims, scene authoring, Kit commands), see [mcp-server-isaacsim](https://github.com/chloepilonv/mcp-server-isaacsim).
 
 ## Architecture
 
@@ -32,8 +34,8 @@ Runs locally on your Mac and communicates with Isaac Lab on a remote **Nebius GP
 ### 1. Install locally
 
 ```bash
-git clone git@github.com:chloepilonv/mcp-server-isaacsim.git
-cd mcp-server-isaacsim
+git clone git@github.com:chloepilonv/mcp-server-isaaclab.git
+cd mcp-server-isaaclab
 pip install -e .
 ```
 
@@ -64,7 +66,7 @@ For **Claude Desktop**, add to `~/Library/Application Support/Claude/claude_desk
 {
   "mcpServers": {
     "isaaclab": {
-      "command": "mcp-server-isaacsim"
+      "command": "mcp-server-isaaclab"
     }
   }
 }
@@ -76,7 +78,7 @@ For **Claude Code** in other projects, add to the project's `.mcp.json`:
 {
   "mcpServers": {
     "isaaclab": {
-      "command": "mcp-server-isaacsim"
+      "command": "mcp-server-isaaclab"
     }
   }
 }
@@ -177,8 +179,8 @@ Use `list_environments` to get the full list from your installation.
 ## Project Structure
 
 ```
-mcp-server-isaacsim/
-├── src/mcp_server_isaacsim/
+mcp-server-isaaclab/
+├── src/mcp_server_isaaclab/
 │   ├── server.py            # MCP server (runs locally, exposes tools)
 │   ├── connection.py        # SSH tunnel + HTTP client manager
 │   └── remote/

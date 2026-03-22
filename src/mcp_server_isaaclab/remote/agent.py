@@ -26,7 +26,7 @@ import uvicorn
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
-logger = logging.getLogger("isaacsim-remote-agent")
+logger = logging.getLogger("isaaclab-remote-agent")
 
 # ---------------------------------------------------------------------------
 # State management
@@ -995,7 +995,7 @@ def _job_summary(j: TrainingJob) -> dict:
 
 def main():
     logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(name)s] %(levelname)s: %(message)s")
-    port = int(os.environ.get("ISAACSIM_AGENT_PORT", "8421"))
+    port = int(os.environ.get("ISAACLAB_AGENT_PORT", "8421"))
     uvicorn.run(app, host="0.0.0.0", port=port, log_level="info")
 
 
